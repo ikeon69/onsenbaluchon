@@ -70,19 +70,88 @@ class Welcome extends CI_Controller {
 		// Récupère la liste des vidéos//
 		$data['videos'] = $this->video_model->allVideosFront();
 
-
 		// Récupère la liste des équipes//
 		$data['equipes'] = $this->equipe_model->allEquipesFront();	
 
 		// Récupère la liste des commentaires//
 		$data['comments'] = $this->comments_model->allCommentsFront();	
+
 		//récupère la dernière vidéo mise en ligne//
 		$data['dernierevideo'] = $this->video_model->derniereVideo();	
 
 
+
+		/***********************************************************************************************/
+/*********************************pagination video front****************************************/
+			
+
+				/*fonction videopaginer qui va paginer mes videos pour le front*/
+			
+	
+
+			file_put_contents('coucou.txt', 'videopaginer', FILE_APPEND);
+
+			//paramètre pagination//
+			$config['base_url'] = base_url().'index.php/welcome/homepage'; //url que va prendre ma pagination, index.php/controller/fonction
+			$config['first_url'] = '1';//ma premiere pagination qui commencera a 1
+			$config['total_rows'] =  $this->video_model->count_items_front();//nombre de total de video que l on aura 
+
+			//file_put_contents('coucou.txt', $this->video_model->count_items_front(), FILE_APPEND);
+
+			$config['per_page'] = 6;//nombre de resulta par page//
+			$config['num_links'] = '1';//numerotation des liens //
+			$config['use_page_numbers'] = TRUE; //utiliser la syntaxe ds pages 1,2,3,4
+
+			//intégration des class de pagination pour bootstrap//
+			$config['next_link'] = 'Page suivante';
+			$config['prev_link'] =  'Page précédente';
+			$config['last_link'] = 'Fin';
+			$config['first_link'] = 'Début';
+			$config['full_tag_open'] = "<ul class='pagination pagination-sm pagination-centered'>";
+			$config['full_tag_close'] =  "</ul>";
+			$config['num_tag_open'] = '<li>';
+			$config['num_tag_close'] = '</li>';
+			$config['cur_tag_open'] =  "<li class='disabled'><li class='active'><a href='#'>";
+			$config['cur_tag_close'] = "<span class='sr-only'></span></a></li></li>";
+			$config['next_tag_open'] = '<li>';
+			$config['next_tagl_close'] =  "</li>";
+			$config['prev_tag_open'] = "<li>";
+			$config['prev_tagl_close'] = '</li>';
+			$config['first_tag_open'] =  "<li>";
+			$config['first_tagl_close'] = "</li>";
+			$config['last_tag_open'] = '<li>';
+			$config['last_tagl_close'] = '</li>';
+
+			$this->pagination->initialize($config);
+
+
+			$page = $this->uri->segment(3); //recupere le numéro de ma page
+			//video/lister/2
+
+
+
+			if(empty($page)){
+
+				$current = 1;
+				//si jarrive sur vidéo lister numero page null donc si page null prend moi la page une 
+			}else{
+				//sinon prend moi la page courante
+				$current = $page;
+			}
+
+			
+				//jappel mon modele et sa fonction videopaginer puis je fixe la limite et le début//
+				$data['allVideosFront'] = $this->video_model->videopaginerfront($config['per_page'], ($current-1) * $config['per_page']);
+			//charge la vue index//
+
+			
+
 		//charge la vue index//
 		$this->load->view('Frontend/index', $data);
 	}
+
+
+
 
 
 		//on crée une fonction login pour creer une session de connexion on commence par créeer cette fonction ds le
@@ -145,7 +214,7 @@ class Welcome extends CI_Controller {
 				}
 
 /**********************************************************************************************/
-/*									fonction deconnexion													*/
+/*									fonction deconnexion										*/
 /***********************************************************************************************/
 	public function logout(){
 
@@ -158,6 +227,21 @@ class Welcome extends CI_Controller {
 
 
 /************************************************************************************************************************/
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 }
 
 
